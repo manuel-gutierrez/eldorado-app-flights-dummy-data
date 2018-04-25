@@ -1,5 +1,7 @@
 {
-    "arrivals": [{
+    "arrivals": 
+[
+    {
         "schedule_date": "2018-04-24",
         "schedule_time": "07:00",
         "estimated_time": "07:00",
@@ -20,7 +22,8 @@
         "status-es": "A Tiempo",
         "status-pt": "A tempo",
         "status-fr": "\u00c0 l'heure"
-    }, {
+    }, 
+    {
         "schedule_date": "2018-04-24",
         "schedule_time": "16:53",
         "estimated_time": "17:16",

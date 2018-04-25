@@ -1,70 +1,21 @@
 {
     "id": " ",
     "type": " ",
-    "reference_airport": " ",
-    "aircraft": " ",
-    "primary_status": " ",
-    "secondary_satus": " ",
-    "schedule_status": " ",
-    "svc_type": " ",
-    "sched_info_present": " ",
-    "relative_time": " ",
-    "time_since_landing": " ",
-    "flight_duration": " ",
-    "map": " ",
-    "seq_number": " ",
-    "number_of_legs": " ",
-    "flight_codes" : {
-        "flight":{
-            "flight_number": " ",
-            "airline_id": " ",
-            "airline_code": " ",
-            "airline_code_type": " ",
-            "number": " ",
-            "operating_flight": " ",
-            "company_logo": " "
-        }
-    }, 
-    "departure": {
-        "airport_code": " ",
-        "terminal": " ",
-        "gate": " ",
-        "baggage": " ",
-        "original_alternate": " ",
-        "schedule_status": " ",
-        "delay_reason": " ",
-        "date_time_info": {
-            "source_time_info": {
-                "date": " ",
-                "date_utc": " ",
-                "time": " ",
-                "time_utc": " ",
-                "accuracy": " ",
-                "position": " ",
-                "source": " "
-            }
-        }
-    },
-    "arrival":{
-        "airport_code": " ",
-        "terminal": " ",
-        "gate": " ",
-        "baggage": " ",
-        "original_alternate": " ",
-        "schedule_status": " ",
-        "delay_reason": " ",
-        "date_time_info": {
-            "source_time_info": {
-                "date": " ",
-                "date_utc": " ",
-                "time": " ",
-                "time_utc": " ",
-                "accuracy": " ",
-                "position": " ",
-                "source": " "
-            }
-        }
-    },
+    "destination_type":" ",
+    "reference_airport": "BOG",
+    "aircraft": "",
+    "status":{},
+    "svc_type": "J",
+    "sched_info_present": true,
+    "relative_time": "",
+    "time_since_landing": "",
+    "flight_duration": "",
+    "map": "",
+    "seq_number": "",
+    "number_of_legs": "",
+    "flight_codes" : {}, 
+    "departure": {},
+    "arrival":{},
     "airborne": {
         "altitude": " ",
         "speed": " ",
