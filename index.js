@@ -48,9 +48,9 @@ function parseOperatingFlight(flight) {
 
 // UTC helper
 function getUTC(flightDate,flightTime,resType) {
-    const date = new Date(flightDate+"T"+flightTime)
+    const date = new Date(flightDate+"T"+flightTime+"-05:00")
     if (resType === "date") {
-        return date.toISOString();
+        return date.toISOString().substring(0, 10);
     }
     if (resType === "time") {
         let time =  new Date(date.toISOString()).getTime()
@@ -59,7 +59,7 @@ function getUTC(flightDate,flightTime,resType) {
 
 }
 
- function convertMs(ms) {
+function convertMs(ms) {
     let d, h, m, s, t;
     s = Math.floor(ms / 1000);
     m = Math.floor(s / 60);
@@ -71,80 +71,154 @@ function getUTC(flightDate,flightTime,resType) {
     d = Math.floor(h / 24);
     h = h % 24;
     if (h<9) { h = `0${h}`}
-    t = `${h}:${m}:${s}`
+    t = `${h}:${m}`
     return t
-  };
+};
 
-// Departure Flight Object 
-function parseDeparture(flight) {
-    let data = {
-        "airport_code": "BOG",
-        "terminal": "T1",
-        "gate": flight.gate,
-        "baggage": flight.claim,
-        "original_alternate": "Original",
-        "schedule_status": getFlightDepartureStatus(flight),
-        "delay_reason": " ",
-        "date_time_info": {
-            "scheduled": {
-                "date": flight.schedule_date,
-                "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
-                "time": flight.schedule_time,
-                "time_utc": getUTC(flight.schedule_date,flight.schedule_time,"time"),
-                "accuracy": "Scheduled",
-                "position": "Gateway",
-                "source": "Airport Data"
-            },
-            "estimated": {
-                "date": flight.actual_date,
-                "date_utc": getUTC(flight.actual_date,flight.estimated_time,"date"),
-                "time": flight.estimated_time,
-                "time_utc":  getUTC(flight.actual_date,flight.estimated_time,"time"),
-                "accuracy": "Estimated",
-                "position": "Gateway",
-                "source": "Airport Data"
-            }
-        }
-    }
 
-    return data
-
-}
 
 // Arrival Flight Object 
-function parseArrival(flight) {
-    let data = {
-        "airport_code": flight.airport,
-        "terminal": "T1",
-        "gate": flight.gate,
-        "baggage": flight.claim,
-        "original_alternate": "Original",
-        "schedule_status": getFlightArrivalStatus(flight),
-        "delay_reason": " ",
-        "date_time_info": {
-            "scheduled": {
-                "date": flight.schedule_date,
-                "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
-                "time": flight.schedule_time,
-                "time_utc":  getUTC(flight.schedule_date,flight.schedule_time,"time"),
-                "accuracy": "Scheduled",
-                "position": "Gateway",
-                "source": "Airport Data"
-            },
-            "estimated": {
-                "date": flight.actual_date,
-                "date_utc": getUTC(flight.actual_date,flight.schedule_time,"date"),
-                "time": flight.estimated_time,
-                "time_utc": getUTC(flight.actual_date,flight.schedule_time,"time"),
-                "accuracy": "Estimated",
-                "position": "Gateway",
-                "source": "Airport Data"
+function parseFlightType(flight,type,origin,destination) {  
+
+    if (origin==="BOG" && type=="D"){
+       
+        if (flight.estimated_time && flight.schedule_time) {
+            let data = {
+                "airport_code": origin,
+                "terminal": "T1",
+                "gate": flight.gate,
+                "baggage": flight.claim,
+                "original_alternate": "Original",
+                "schedule_status": getFlightArrivalStatus(flight),
+                "delay_reason": " ",
+                "date_time_info": {
+                    "scheduled": {
+                        "date": flight.schedule_date,
+                        "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
+                        "time": flight.schedule_time,
+                        "time_utc":  getUTC(flight.schedule_date,flight.schedule_time,"time"),
+                        "accuracy": "Scheduled",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    },
+                    "estimated": {
+                        "date": flight.actual_date,
+                        "date_utc": getUTC(flight.actual_date,flight.schedule_time,"date"),
+                        "time": flight.estimated_time,
+                        "time_utc": getUTC(flight.actual_date,flight.schedule_time,"time"),
+                        "accuracy": "Estimated",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    }
+                }
             }
+            return data
         }
+        else {
+            let data = {
+                "airport_code": flight.airport,
+                "terminal": "T1",
+                "gate": flight.gate,
+                "baggage": flight.claim,
+                "original_alternate": "Original",
+                "schedule_status": getFlightArrivalStatus(flight),
+                "delay_reason": " ",
+                "date_time_info": {
+                    "scheduled": {
+                        "date": flight.schedule_date,
+                        "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
+                        "time": flight.schedule_time,
+                        "time_utc":  getUTC(flight.schedule_date,flight.schedule_time,"time"),
+                        "accuracy": "Scheduled",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    }
+                }
+            }
+            return data
+        } 
+
+    } else if (origin==="BOG" && type=="A") {
+        let data = {
+            "airport_code": destination,
+            "terminal": " ",
+            "gate": " ",
+            "baggage": " ",
+            "original_alternate": " ",
+            "schedule_status": " ",
+            "delay_reason": " ",
+            "date_time_info": {}
+        }
+        return data
+    } else if (origin !== "BOG" && type=="D") {
+        let data = {
+            "airport_code": origin,
+            "terminal": " ",
+            "gate": " ",
+            "baggage": " ",
+            "original_alternate": " ",
+            "schedule_status": " ",
+            "delay_reason": " ",
+            "date_time_info": {}
+        } 
+        return data
+    } else if (origin !== "BOG" && type=="A") {
+        if (flight.estimated_time && flight.schedule_time) {
+            let data = {
+                "airport_code": destination,
+                "terminal": "T1",
+                "gate": flight.gate,
+                "baggage": flight.claim,
+                "original_alternate": "Original",
+                "schedule_status": getFlightArrivalStatus(flight),
+                "delay_reason": " ",
+                "date_time_info": {
+                    "scheduled": {
+                        "date": flight.schedule_date,
+                        "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
+                        "time": flight.schedule_time,
+                        "time_utc":  getUTC(flight.schedule_date,flight.schedule_time,"time"),
+                        "accuracy": "Scheduled",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    },
+                    "estimated": {
+                        "date": flight.actual_date,
+                        "date_utc": getUTC(flight.actual_date,flight.schedule_time,"date"),
+                        "time": flight.estimated_time,
+                        "time_utc": getUTC(flight.actual_date,flight.schedule_time,"time"),
+                        "accuracy": "Estimated",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    }
+                }
+            }
+            return data
+        }
+        else {
+            let data = {
+                "airport_code": destination,
+                "terminal": "T1",
+                "gate": flight.gate,
+                "baggage": flight.claim,
+                "original_alternate": "Original",
+                "schedule_status": getFlightArrivalStatus(flight),
+                "delay_reason": " ",
+                "date_time_info": {
+                    "scheduled": {
+                        "date": flight.schedule_date,
+                        "date_utc": getUTC(flight.schedule_date,flight.schedule_time,"date"),
+                        "time": flight.schedule_time,
+                        "time_utc":  getUTC(flight.schedule_date,flight.schedule_time,"time"),
+                        "accuracy": "Scheduled",
+                        "position": "Gateway",
+                        "source": "Airport Data"
+                    }
+                }
+            }
+            return data
+        } 
     }
-
-    return data
-
 }
 
 function getFlightDepartureStatus(flight) {
@@ -178,13 +252,29 @@ function getFlightArrivalStatus(flight) {
 }
 
 function parseDepartureDocument (flight,fD){
+  
     if (flight && fD) {
         fD.id = getFlightId(flight.airline_code,flight.flight_number,"BOG",flight.schedule_date,flight.schedule_time)
         fD.type = "Departure",
         fD.status = parseStatus(flight["status-en"],flight["status-es"])
         fD.destination_type = flight.flight_type
-        fD.departure = parseDeparture(flight)
-        fD.arrival = parseArrival(flight) 
+        fD.departure = parseFlightType(flight,"D","BOG",flight.airport)
+        fD.arrival = parseFlightType(flight,"A","BOG",flight.airport)
+        return fD
+    }   
+    else {
+        return false
+    }
+
+}
+function parseArrivalDocument (flight,fD){
+    if (flight && fD) {
+        fD.id = getFlightId(flight.airline_code,flight.flight_number,flight.airport,flight.schedule_date,flight.schedule_time)
+        fD.type = "Arrival",
+        fD.status = parseStatus(flight["status-en"],flight["status-es"])
+        fD.destination_type = flight.flight_type
+        fD.departure = parseFlightType(flight,"D",flight.airport,"BOG")
+        fD.arrival = parseFlightType(flight,"A",flight.airport,"BOG") 
         return fD
     }   
     else {
@@ -195,26 +285,31 @@ function parseDepartureDocument (flight,fD){
 
 
 try {
-    const flightData = JSON.parse(fs.readFileSync('./single-flight-data.json','utf8'))
+    const flightData = JSON.parse(fs.readFileSync('./flight-data.json','utf8'))
     const flightDocument = JSON.parse(fs.readFileSync('./flight-data-document.json','utf8'))
 
     if (flightData && flightDocument) {
-        _.each(flightData, function(f, key){
-            let doc = parseDepartureDocument(f,flightDocument)
-            console.log(JSON.stringify(doc));
+        _.each(flightData.arrivals, function(flight, key){
+            let docu = parseArrivalDocument(flight,flightDocument)
+            let docRef = db.collection('flights')
+            docRef
+            .doc(docu.id)
+            .set(docu).then((data)=> {
+                console.log("ARRIVAL__",data)
+            })
         })
-
-    // let docRef = db.collection('flights')
-    // _.each(flightData, function(value, key){
-    //     docRef
-    //     .doc(value.id)
-    //     .set(value).then(()=> {
-    //      console.log('New flight entry created')
-    //     })
-    // })
+        _.each(flightData.departures, function(flight, key){
+            let docu = parseDepartureDocument(flight,flightDocument)
+            let docRef = db.collection('flights')
+            docRef
+            .doc(docu.id)
+            .set(docu).then((data)=> {
+                console.log("DEPARTURE______",data)
+            })
+        })
     }
 } catch (error) {
-    console.error("Error when reading the file", error)
+    throw new Error(error);
 }
 
 
