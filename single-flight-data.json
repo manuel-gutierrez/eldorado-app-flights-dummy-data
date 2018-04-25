@@ -1,0 +1,47 @@
+[
+    {
+        "schedule_date": "2018-04-24",
+        "schedule_time": "07:00",
+        "estimated_time": "07:00",
+        "actual_date": "2018-04-24",
+        "actual_time": "07:00",
+        "id": "3526958",
+        "airline": "Avianca",
+        "airline_code": "AV",
+        "flight_number": "5041",
+        "airline_logo": "AV inline new.jpg",
+        "gate": "",
+        "claim": "2",
+        "flight_type": "I",
+        "airport": "JFK",
+        "location": "New York",
+        "location-es": "Nueva York",
+        "status-en": "On Time",
+        "status-es": "A Tiempo",
+        "status-pt": "A tempo",
+        "status-fr": "\u00c0 l'heure"
+    },
+    {
+        "schedule_date": "2018-04-24",
+        "schedule_time": "07:00",
+        "estimated_time": "07:00",
+        "actual_date": "2018-04-24",
+        "actual_time": "07:00",
+        "id": "3526958",
+        "airline": "Avianca",
+        "airline_code": "AV",
+        "flight_number": "5041",
+        "airline_logo": "AV inline new.jpg",
+        "gate": "",
+        "claim": "2",
+        "flight_type": "I",
+        "airport": "JFK",
+        "location": "New York",
+        "location-es": "Nueva York",
+        "status-en": "On Time",
+        "status-es": "A Tiempo",
+        "status-pt": "A tempo",
+        "status-fr": "\u00c0 l'heure"
+    }
+]
+    
