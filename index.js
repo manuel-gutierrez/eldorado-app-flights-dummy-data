@@ -4,16 +4,21 @@ const admin = require('firebase-admin')
 const serviceAccount = require ('./serviceKey.json')
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://eldorado-app.firebaseio.com"
+    databaseURL: "https://el-dorado-app.firebaseio.com"
 });
-
 const db = admin.firestore()
 
-// Get the flight Id
+// To understand this code better go to the bottom of the code first. :) 
+
+//-----
+// Flight Data Procesing Functions.
+//-----
+
+// This function build the Flight Id according to OAG format
 function getFlightId(airlineCode,flightNumber,departureAirport,date,scheduledTime) {
-    return `${airlineCode}${flightNumber}:${departureAirport}${date}${scheduledTime}`
+    return `${airlineCode}${flightNumber}:${departureAirport}:${date}:${scheduledTime}`
 }
-// parse flight status
+// This helper function parse the flight status in the two languages (ES and EN)
 function parseStatus(statusEN,statusES) {
     return (
     {
@@ -31,7 +36,7 @@ function parseStatus(statusEN,statusES) {
     )
 }
 
-// Operating Flight
+// This helper function parse the Operating Flight Object.
 function parseOperatingFlight(flight) {
     return ({
         "flight":{
@@ -46,7 +51,7 @@ function parseOperatingFlight(flight) {
     })
 }
 
-// UTC helper
+// UTC helper function 
 function getUTC(flightDate,flightTime,resType) {
     const date = new Date(flightDate+"T"+flightTime+"-05:00")
     if (resType === "date") {
@@ -59,6 +64,7 @@ function getUTC(flightDate,flightTime,resType) {
 
 }
 
+// Function that Convert Milleseconds to HH:MM:SS
 function convertMs(ms) {
     let d, h, m, s, t;
     s = Math.floor(ms / 1000);
@@ -77,7 +83,11 @@ function convertMs(ms) {
 
 
 
-// Arrival Flight Object 
+// This  function take an arrival or departure flight
+// and parse its corresponding arrival or departure object.
+// This is probably the most complex function so please let 
+// me know if you have any question. 
+
 function parseFlightType(flight,type,origin,destination) {  
 
     if (origin==="BOG" && type=="D"){
@@ -221,6 +231,11 @@ function parseFlightType(flight,type,origin,destination) {
     }
 }
 
+
+
+// This helper function evaluate the departure status based on the estimated
+// vs scheduled information.
+
 function getFlightDepartureStatus(flight) {
     if (flight){
         const scheduled = new Date(flight.schedule_date+"T"+flight.schedule_time+"Z")
@@ -236,6 +251,8 @@ function getFlightDepartureStatus(flight) {
     return "Error Flight data not provived"
 }
 
+// Same as above but for arrivals
+
 function getFlightArrivalStatus(flight) {
     if (flight){
         const scheduled = new Date(flight.schedule_date+"T"+flight.schedule_time+"Z")
@@ -250,6 +267,11 @@ function getFlightArrivalStatus(flight) {
     }
     return "Error Flight data not provived"
 }
+
+
+// This function parse a Departure  with the adocument with the available information. 
+// It takes as an input the flight object comming from El Dorado and the Document 
+// Format object present in the flight-data-document.json file.
 
 function parseDepartureDocument (flight,fD){
   
@@ -267,6 +289,11 @@ function parseDepartureDocument (flight,fD){
     }
 
 }
+
+// This function parse a Arrival  with the adocument with the available information. 
+// It takes as an input the flight object comming from El Dorado and the Document 
+// Format object present in the flight-data-document.json file.
+
 function parseArrivalDocument (flight,fD){
     if (flight && fD) {
         fD.id = getFlightId(flight.airline_code,flight.flight_number,flight.airport,flight.schedule_date,flight.schedule_time)
@@ -284,27 +311,40 @@ function parseArrivalDocument (flight,fD){
 }
 
 
+//----------
+// Main
+//----------
+
+// 1. Read the Flight Data comming from el dorado and an Empty json with the Flight Document
+// structure according to the data arquitecture document. 
+// 2. Procecess the arrivals
+// 3. Process the Departures
+
+
+
 try {
     const flightData = JSON.parse(fs.readFileSync('./flight-data.json','utf8'))
     const flightDocument = JSON.parse(fs.readFileSync('./flight-data-document.json','utf8'))
 
     if (flightData && flightDocument) {
+        // arrivals procesing
         _.each(flightData.arrivals, function(flight, key){
             let docu = parseArrivalDocument(flight,flightDocument)
             let docRef = db.collection('flights')
             docRef
             .doc(docu.id)
             .set(docu).then((data)=> {
-                console.log("ARRIVAL__",data)
+            console.log("ARRIVAL__",data)
             })
         })
+        // departures processing
         _.each(flightData.departures, function(flight, key){
             let docu = parseDepartureDocument(flight,flightDocument)
             let docRef = db.collection('flights')
             docRef
             .doc(docu.id)
             .set(docu).then((data)=> {
-                console.log("DEPARTURE______",data)
+            console.log("DEPARTURE______",data)
             })
         })
     }

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "eldorado-app",
+  "private_key_id": "3d7cd3b87aec96c7e77844f3005d3c35787f4f33",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCp2cel1yXsTlWw\nhds7OUgH+E5pp1ymKbohkjWaD2pq7UanX7wzVFeuF3UZXPa0VF3VPoWxjscdDlRm\nIaxjYSrm07DE6IpnL+aqWTS/RqzTuEFiqwVkcEE2IZLWpZiCKcnb162+GDFHDItY\nNsYxn39jLGpdw7Bk5FJWfzrMbSVkgm1iE5S4lVOmEuO9uM/Sa8CBNWKLPn++vLkD\nlJgF401JNe2BGfEWQoBSWsMHQT4jwPIT0aPeQgYcurnbN1aR/c9uQAnb3aW8zbUt\n/GKOjhq7XEqmnxm7b++l40YBx73vAsPX+yqHG56DQNUo3gtCzjQw268Y5De1LPMJ\nDiCD2VQFAgMBAAECggEAFXmr6M/KY3WnF3XhOXx9W0adsXWf/QFnH5IDNXqv/5uH\nFKgB3XKTUHd2TpHmvnexUoJAeKn/CnEyoiQtTfZt7HgFEGx/fVr83PqA9RNMTEuu\ndrl9aczYre2ySXHwFbsPYvzC4rdf2aYgIzPvvLv4KROnUjopHiSRNY8KIelF8k5n\nRwtZZBWSzz2wMzdC2qFKjhhqdCrGdblaAQnKI73lbS5yO1nu+6xvBSJ1OEGbpWLM\nfDJWHtZXvON7rMG/2yK3z5PUJE3s+ZWzFZ3YSz1nm+AsICjw+z+G0zxmxY/S49zr\nJYxVG9b1JvpUawSBzVGIeVO5A3igD3m815uN4clCAQKBgQDrAL5Kt/q+mKiigUAm\nWaun8ya350cIkYq8jRQOHrDZd8un20Bdsy6cOAgwLAXyGzQM1Fx+Ap0PscOcrT8/\nWTwKu0KY3Uby9PZ33cbhtgKXXmdStQgl+p+yejAzkp4TMnugXLFi6AEK7oX8OEOX\n5eqDNfXLUsaZfRjumu0GPkk6BQKBgQC5BszsKYZXhCSU6sWaTE/Rw3eXNoX6aqh3\nrH0uXoqorRw4Ovz+ZQy/l1CbzyZCxd+4VcbWt1omKntFbYGPbaFyUz5UIIwjpVV6\nJn7tTmrBDwBSfjwr/6Mja3GDdo0kI3d7hEOC1Fc+9H7uPxHw3qDjZYZEryIyepm0\nI9i3jZjSAQKBgQCFeXObbqmdLYnCWtT7szya9LDODS88P6Xj9+EnL+lUawUh/pat\nYYMcuXp1Gdv6qdbDXq5157gbXOT0jTX6Hg3LLpbhyfRtNBL0++Lk+gK4xKa8xBOv\ntoyTy3CrKiBcWPT8nQknWwyUj+tL2Q0TLkQnaDOF2yrvrKzHgPkU7bWbnQKBgQCs\nN7A1gNESVGTYV01luPHyhMWjcZRy6SO1gE9kAYt+ROKnVAB3qQacrfLRk5ZBQHxj\nzzMsV60JKTFkBfE51wkWqHSzSTgnVZSiBYLOztZ+q7/ZCLZpHaBzL2aQvp/Qq1Jj\nHVDZTVuHtXsPtpS0ZgPKpIy9EWX7JjI6gcMN1jYQAQKBgGpN9lDIAYQpZ8t6+k4V\nXMhml6A6lWH2cXeAZvhWH8ZiMUtHmnUfuUIdeP8ye9B4EPAV9Iz5t1XZ7gd10zET\nHwDW6lXnJkmbl6M7Hcs1/53fUz0dLFpU4J/CnM/mRuLUloeyhN5/l1sbQpB9sZNg\n4McBYaTSq6sGIw6SZKR1EojH\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-lm2jt@eldorado-app.iam.gserviceaccount.com",
+  "client_id": "117398329998701251933",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-lm2jt%40eldorado-app.iam.gserviceaccount.com"
+}
