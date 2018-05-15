@@ -36,6 +36,18 @@ function parseStatus(statusEN,statusES) {
     )
 }
 
+
+function parseLocation(flight) {
+    return (
+    {
+        "en_EN":flight["location"],
+        "es_ES":flight["location-es"]
+    })
+}
+
+
+
+
 // This helper function parse the Operating Flight Object.
 function parseOperatingFlight(flight) {
     return ({
@@ -90,13 +102,19 @@ function convertMs(ms) {
 
 function parseFlightType(flight,type,origin,destination) {  
 
+    // Departures : Departure Data  
     if (origin==="BOG" && type=="D"){
        
         if (flight.estimated_time && flight.schedule_time) {
             let data = {
                 "airport_code": origin,
-                "terminal": "T1",
+                "location": {
+                    "en_EN":"El Dorado International Airport",
+                    "es_ES":"Aeropuerto Internacional el Dorado"
+                },
+                "terminal": "T1",                
                 "gate": flight.gate,
+                "gate_map": "https://eldorado.aero/wp-content/uploads/2016/04/home-mapas-icono.png",
                 "baggage": flight.claim,
                 "original_alternate": "Original",
                 "schedule_status": getFlightArrivalStatus(flight),
@@ -126,9 +144,14 @@ function parseFlightType(flight,type,origin,destination) {
         }
         else {
             let data = {
-                "airport_code": flight.airport,
+                "airport_code": origin,
+                "location": {
+                    "en_EN":"El Dorado International Airport",
+                    "es_ES":"Aeropuerto Internacional el Dorado"
+                },
                 "terminal": "T1",
                 "gate": flight.gate,
+                "gate_map": "https://eldorado.aero/wp-content/uploads/2016/04/home-mapas-icono.png",
                 "baggage": flight.claim,
                 "original_alternate": "Original",
                 "schedule_status": getFlightArrivalStatus(flight),
@@ -147,10 +170,11 @@ function parseFlightType(flight,type,origin,destination) {
             }
             return data
         } 
-
+    // Departures : Arrival Data  
     } else if (origin==="BOG" && type=="A") {
         let data = {
             "airport_code": destination,
+            "location":parseLocation(flight),
             "terminal": " ",
             "gate": " ",
             "baggage": " ",
@@ -160,9 +184,12 @@ function parseFlightType(flight,type,origin,destination) {
             "date_time_info": {}
         }
         return data
+
+    // Arrivals : Departure Data
     } else if (origin !== "BOG" && type=="D") {
         let data = {
             "airport_code": origin,
+            "location":parseLocation(flight),
             "terminal": " ",
             "gate": " ",
             "baggage": " ",
@@ -172,12 +199,15 @@ function parseFlightType(flight,type,origin,destination) {
             "date_time_info": {}
         } 
         return data
+    // Arrivals: Arrival Data  
     } else if (origin !== "BOG" && type=="A") {
         if (flight.estimated_time && flight.schedule_time) {
             let data = {
                 "airport_code": destination,
+                "location":parseLocation(flight),
                 "terminal": "T1",
                 "gate": flight.gate,
+                "gate_map": "https://eldorado.aero/wp-content/uploads/2016/04/home-mapas-icono.png",
                 "baggage": flight.claim,
                 "original_alternate": "Original",
                 "schedule_status": getFlightArrivalStatus(flight),
@@ -208,8 +238,10 @@ function parseFlightType(flight,type,origin,destination) {
         else {
             let data = {
                 "airport_code": destination,
+                "location":parseLocation(flight),
                 "terminal": "T1",
                 "gate": flight.gate,
+                "gate_map": "https://eldorado.aero/wp-content/uploads/2016/04/home-mapas-icono.png",
                 "baggage": flight.claim,
                 "original_alternate": "Original",
                 "schedule_status": getFlightArrivalStatus(flight),
@@ -237,36 +269,75 @@ function parseFlightType(flight,type,origin,destination) {
 // vs scheduled information.
 
 function getFlightDepartureStatus(flight) {
-    if (flight){
+     const isFlightEmpty = _.isEmpty(flight)
+
+    if (!isFlightEmpty){
         const scheduled = new Date(flight.schedule_date+"T"+flight.schedule_time+"Z")
         const estimated = new Date(flight.schedule_date+"T"+flight.estimated_time+"Z")
-        if (estimated.getTime() === scheduled.getTime()) {
-            return "DO"
-        } else if ( scheduled.getTime() < estimated.getTime()) {
-            return "DD"
-        }else if (scheduled.getTime() > estimated.getTime()) {
-            return "DE"
+        
+        if (!_.isEmpty(estimated) && !_.isEmpty(scheduled)){
+            if (estimated.getTime() === scheduled.getTime()) {
+                return "DO"
+            } else if ( scheduled.getTime() < estimated.getTime()) {
+                return "DD"
+            }else if (scheduled.getTime() > estimated.getTime()) {
+                return "DE"
+            }
+        } else {
+            return(" ")
         }
+
+   
+    } else {
+
+        throw new Error("Flight Data not present")
     }
-    return "Error Flight data not provived"
+    
 }
 
 // Same as above but for arrivals
 
 function getFlightArrivalStatus(flight) {
-    if (flight){
+    
+    const isFlightEmpty = _.isEmpty(flight)
+
+    if (!isFlightEmpty){
         const scheduled = new Date(flight.schedule_date+"T"+flight.schedule_time+"Z")
         const estimated = new Date(flight.schedule_date+"T"+flight.estimated_time+"Z")
-        if (estimated.getTime() === scheduled.getTime()) {
-            return "AO"
-        } else if ( scheduled.getTime() < estimated.getTime()) {
-            return "AD"
-        }else if (scheduled.getTime() > estimated.getTime()) {
-            return "AE"
-        }
+
+        if (!_.isEmpty(estimated) && !_.isEmpty(scheduled)){
+           if (estimated.getTime() === scheduled.getTime()) {
+               return "AO"
+           } else if ( scheduled.getTime() < estimated.getTime()) {
+               return "AD"
+           }else if (scheduled.getTime() > estimated.getTime()) {
+               return "AE"
+           } 
+       } else {
+         return("")
+       }
+ 
+    } else {
+
+        throw new Error("Flight Data not present")
     }
-    return "Error Flight data not provived"
+    
 }
+
+
+function parseFlightData(flight) {
+    return ({
+        "flight_number":flight.flight_number,
+        "airline_name":flight.airline,
+        "airline_code":flight.airline_code,
+        "airline_code_type":"IATA",
+        "number":flight.flight_number,
+        "operating_flight": true,
+        "company_logo":`https://eldorado.aero/wp-content/plugins/airportdigital-flights/public/images/airline/sq/${flight.airline_code}.png`
+    })
+}
+
+
 
 
 // This function parse a Departure  with the adocument with the available information. 
@@ -282,6 +353,7 @@ function parseDepartureDocument (flight,fD){
         fD.destination_type = flight.flight_type
         fD.departure = parseFlightType(flight,"D","BOG",flight.airport)
         fD.arrival = parseFlightType(flight,"A","BOG",flight.airport)
+        fD.flight_codes[0] = parseFlightData(flight)
         return fD
     }   
     else {
@@ -289,6 +361,8 @@ function parseDepartureDocument (flight,fD){
     }
 
 }
+
+
 
 // This function parse a Arrival  with the adocument with the available information. 
 // It takes as an input the flight object comming from El Dorado and the Document 
@@ -302,6 +376,7 @@ function parseArrivalDocument (flight,fD){
         fD.destination_type = flight.flight_type
         fD.departure = parseFlightType(flight,"D",flight.airport,"BOG")
         fD.arrival = parseFlightType(flight,"A",flight.airport,"BOG") 
+        fD.flight_codes[0] = parseFlightData(flight)
         return fD
     }   
     else {
@@ -331,25 +406,31 @@ try {
         _.each(flightData.arrivals, function(flight, key){
             let docu = parseArrivalDocument(flight,flightDocument)
             let docRef = db.collection('flights')
-            docRef
             .doc(docu.id)
-            .set(docu).then((data)=> {
-            console.log("ARRIVAL__",data)
+            .set(docu)
+            .then((data)=> {
+              return(true)
+            })
+            .catch((error) => {
+              console.error(error) 
+              throw new Error(error) 
             })
         })
         // departures processing
+
         _.each(flightData.departures, function(flight, key){
             let docu = parseDepartureDocument(flight,flightDocument)
             let docRef = db.collection('flights')
-            docRef
             .doc(docu.id)
             .set(docu).then((data)=> {
-            console.log("DEPARTURE______",data)
+              return(true)
             })
         })
+    } else {
+        throw Error("Document Data or Flight Data not Present")
     }
 } catch (error) {
-    throw new Error(error);
+     throw new Error(error);
 }
 
 

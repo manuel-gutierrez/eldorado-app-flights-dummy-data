@@ -13,7 +13,7 @@
     "map": "",
     "seq_number": "",
     "number_of_legs": "",
-    "flight_codes" : {}, 
+    "flight_codes" : [], 
     "departure": {},
     "arrival":{},
     "airborne": {
